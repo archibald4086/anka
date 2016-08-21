@@ -1,0 +1,4 @@
+authority/app/composer.json
+authority/app/composer.lock
+vendor/
+nbproject/

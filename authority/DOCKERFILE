@@ -1,0 +1,20 @@
+FROM anka/base:v1
+
+#composer dependecies
+WORKDIR /var/www/app
+RUN composer require "symfony/http-foundation:3.1.3"
+RUN composer require "symfony/routing:3.1.3"
+
+#Adding project to the autoloader
+RUN sed -i 's/"require"/"autoload":{"psr-4": {"Anka\\\\Authority\\\\": "src\/"}},"require"/g' /var/www/app/composer.json
+RUN composer dump-autoload
+
+#setting permissions
+RUN chown -R www-data:www-data /var/www/app
+RUN chmod -R 755 /var/www/app
+
+#setting entrypoint script
+RUN mkdir -p /start
+COPY entrypoint.sh /start/entrypoint.sh
+RUN chmod +x /start/entrypoint.sh
+ENTRYPOINT ["/start/entrypoint.sh"]

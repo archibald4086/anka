@@ -1,0 +1,8 @@
+cd /c/Users/Sourcen/anka/base
+
+
+docker build -t anka/base:v1 -f DOCKERFILE  .
+docker run -t -p 80:80 -i anka/base:v1
+docker run -t -p 80:80 -v "/c/Users/Sourcen/anka/base/app/src":"/var/www/app/src" -i anka/base:v1
+
+

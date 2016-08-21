@@ -1,0 +1,5 @@
+FROM postgres:9.5.4
+
+ENV POSTGRES_USER="anka"
+ENV POSTGRES_PASSWORD="Gh!hsZ_12Er$"
+ENV POSTGRES_DB="anka_db"

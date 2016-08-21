@@ -1,0 +1,22 @@
+FROM ubuntu:16.04
+
+EXPOSE 80
+
+#needed apps
+RUN apt-get update
+RUN apt-get install -y nginx php7.0 php7.0-fpm php7.0-mbstring curl git
+RUN phpenmod mbstring
+RUN chmod 777 /usr/local/bin
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN chmod 755 /usr/local/bin
+
+#setting up dirs
+RUN mkdir -p /var/www/app/src
+VOLUME ["/var/www/app/src"]
+
+#configuring nginx
+COPY default /etc/nginx/sites-available/default
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.0/fpm/php.ini
+RUN sed -i 's/display_startup_errors = Off/display_startup_errors = On/g' /etc/php/7.0/fpm/php.ini
+RUN sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.0/fpm/php.ini
