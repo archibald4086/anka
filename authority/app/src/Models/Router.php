@@ -46,6 +46,9 @@ class Router {
     public function route(){
         $req = Request::createFromGlobals();
         $res = new Response();
+        $res->headers->set('Content-Type', 'application/json');
+        $res->setCharset('utf-8');
+        
         try{
             /*
             if(!$req->isXmlHttpRequest()){
@@ -63,8 +66,7 @@ class Router {
             $controller->$action($req, $res);
             
         } catch (\Exception $ex) {
-            $res->headers->set('Content-Type', 'application/json');
-            $res->setCharset('utf-8');
+            
             $res->setContent(json_encode(array()));
             $res->setStatusCode(404);
             $res->prepare($req);
