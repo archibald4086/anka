@@ -11,5 +11,5 @@ return array(
     'db' => array(
         'host' => '198.1.0.12'
     ),
-    'test' => 'bla123', 
+    'test' => 'bla', 
 );
