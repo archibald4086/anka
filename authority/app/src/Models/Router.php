@@ -1,14 +1,12 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Anka\Authority\Models;
 
 use Anka\Authority\Models\Config;
+use Anka\Authority\Controller\ErrorController;
+use Anka\Authority\Models\Exceptions\Http\BadRequestException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -47,11 +45,9 @@ class Router {
         $req = Request::createFromGlobals();
         $res = new Response();
         try{
-            /*
             if(!$req->isXmlHttpRequest()){
-                throw new \Exception();
+                throw new BadRequestException();
             }
-            */
             $context = new RequestContext('/');
             $matcher = new UrlMatcher($this->_routes, $context);
             $params = $matcher->match($req->getPathInfo());
@@ -63,12 +59,13 @@ class Router {
             $controller->$action($req, $res);
             
         } catch (\Exception $ex) {
-            $res->headers->set('Content-Type', 'application/json');
-            $res->setCharset('utf-8');
-            $res->setContent(json_encode(array()));
-            $res->setStatusCode(404);
-            $res->prepare($req);
-            $res->send();
+            $ec = new ErrorController();
+            if($ex instanceof BadRequestException){
+                $ec->badRequestAction($req, $res);
+            }
+            if($ex instanceof ResourceNotFoundException){
+                $ec->notFoundAction($req, $res);
+            }
         }
     }
 }
